@@ -1,8 +1,8 @@
-import { eventList } from './shared';
+import { allEventIdsTypes, eventList } from './shared';
 
-export function getEventObj(name, params) {
-  const eventType = eventList.find(({ id }) => id === name)?.type ?? '';
-  let event;
+export function getEventObj<T extends EventInit>(name: allEventIdsTypes, params: T): Event {
+  const eventType = eventList.find((e) => e.id === name)?.type ?? '';
+  let event: Event;
 
   switch (eventType) {
     case 'mouse-event':
@@ -30,7 +30,7 @@ export function getEventObj(name, params) {
   return event;
 }
 
-export default function (element, name, params) {
+export default function <T extends EventInit>(element: HTMLElement, name: allEventIdsTypes, params: T) {
   const event = getEventObj(name, params);
   const useNativeEvents = ['focus', 'submit', 'blur'];
 

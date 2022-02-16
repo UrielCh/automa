@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
 import simulateEvent from './simulate-event';
 
-function formEvent(element, data) {
+type InputType = 'text-field' | 'checkbox' | 'radio' | 'select';
+
+function formEvent(element: HTMLInputElement, data: {type: InputType, value: string | boolean, isEditable?: boolean}) {
   if (data.type === 'text-field') {
-    const code = /\s/.test(data.value)
+    const code = /\s/.test(data.value as string)
       ? 'Space'
-      : `key${data.value.toUpperCase()}`;
+      : `key${(data.value as string).toUpperCase()}`;
 
     simulateEvent(element, 'keydown', {
       code,
@@ -31,7 +33,7 @@ function formEvent(element, data) {
     new Event('change', { bubbles: true, cancelable: true })
   );
 }
-function inputText({ data, element, isEditable, index = 0, callback }) {
+function inputText({ data, element, isEditable = false, index = 0, callback }) {
   const noDelay = data.delay === 0;
   const currentChar = data.value[index] ?? '';
   const elementKey = isEditable ? 'textContent' : 'value';
@@ -49,7 +51,7 @@ function inputText({ data, element, isEditable, index = 0, callback }) {
   }
 }
 
-export default function (element, data, callback) {
+export default function (element: HTMLInputElement, data: {type: InputType, value: string, clearValue?: boolean, selected?: boolean, isEditable?: boolean}, callback) {
   const textFields = ['INPUT', 'TEXTAREA'];
   const isEditable =
     element.hasAttribute('contenteditable') && element.isContentEditable;
@@ -69,8 +71,8 @@ export default function (element, data, callback) {
   }
 
   if (data.type === 'checkbox' || data.type === 'radio') {
-    element.checked = data.selected;
-    formEvent(element, { type: data.type, value: data.selected });
+    element.checked = data.selected as boolean;
+    formEvent(element, { type: data.type, value: data.selected as boolean});
     callback(element.checked);
     return;
   }
