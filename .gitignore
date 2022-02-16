@@ -26,3 +26,7 @@ secrets.development.js
 get-pass-key.js
 
 .idea
+pnpm-lock.yaml
+src/utils/handle-form-element.js
+src/utils/shared.js
+src/utils/simulate-event.js
